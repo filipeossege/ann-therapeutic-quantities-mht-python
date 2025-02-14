@@ -1,3 +1,5 @@
+#Code by Filipe Ossege
+
 #Imported packages
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,7 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D # <--- This is important for 3d plotting
 from scipy.interpolate import griddata
 
 # To install the scikit-learn (sklearn) package in the Spyder software, use the following commands
-# phirst install the miniconda anaconda distribution in your machine
+# first install the miniconda anaconda distribution in your machine
 # Open the anaconda prompt from miniconda and create an environment with the command
 # "conda create -n spyder-env -y"
 # Activate the environment with
@@ -22,7 +24,7 @@ from scipy.interpolate import griddata
 # To install the sklearn, matplotlib and scipy package, type
 # "pip3 install sklearn matplotlib scipy"
 # Then, to run the routine, type in terminal
-# "python3 AIphiNAL.py"
+# "python3 AIFINAL.py"
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -42,20 +44,20 @@ YTest2 = YTest[:,1]
 
 # Standardize
 scaler = StandardScaler()
-XTrain_scaled = scaler.phit_transform(XTrain)
+XTrain_scaled = scaler.fit_transform(XTrain)
 XTest_scaled = scaler.transform(XTest)
 scaler_Y1 = StandardScaler()
-YTrain1_scaled = scaler_Y1.phit_transform(YTrain1.reshape(-1, 1)).ravel()
+YTrain1_scaled = scaler_Y1.fit_transform(YTrain1.reshape(-1, 1)).ravel()
 scaler_Y2 = StandardScaler()
-YTrain2_scaled = scaler_Y2.phit_transform(YTrain2.reshape(-1, 1)).ravel()
+YTrain2_scaled = scaler_Y2.fit_transform(YTrain2.reshape(-1, 1)).ravel()
 
-# phirst model (temperature)
+# first model (temperature)
 Mdl1 = MLPRegressor(hidden_layer_sizes=(161, 10, 300),
                     activation='logistic', #logistic = sigmoid
                     alpha=5.0754e-06,
                     max_iter=1000,
                     solver='lbfgs')
-Mdl1.phit(XTrain_scaled, YTrain1_scaled)
+Mdl1.fit(XTrain_scaled, YTrain1_scaled)
 
 # Second model (time)
 Mdl2 = MLPRegressor(hidden_layer_sizes=(10, 293),
@@ -63,37 +65,37 @@ Mdl2 = MLPRegressor(hidden_layer_sizes=(10, 293),
                     alpha=2.1568e-08,
                     max_iter=1000,
                     solver='lbfgs')
-Mdl2.phit(XTrain_scaled, YTrain1_scaled)
+Mdl2.fit(XTrain_scaled, YTrain1_scaled)
 
 testPredictions1 = scaler_Y1.inverse_transform(Mdl1.predict(XTest_scaled).reshape(-1, 1)).ravel()
 testPredictions2 = scaler_Y2.inverse_transform(Mdl2.predict(XTest_scaled).reshape(-1, 1)).ravel()
 
-plt.phigure(phigsize=(4, 4))
+plt.figure(figsize=(4, 4))
 plt.plot(YTest1, testPredictions1, ".")
 plt.plot(YTest1, YTest1)
 plt.xlabel("True Temperature (°C)")
 plt.ylabel("Predicted Temperature (°C)")
-plt.savephig('Temperature.png', format='png', dpi=1200, bbox_inches='tight')
+plt.savefig('Temperature.png', format='png', dpi=1200, bbox_inches='tight')
 
-plt.phigure(phigsize=(4, 4))
+plt.figure(figsize=(4, 4))
 plt.plot(YTest2, testPredictions2, ".")
 plt.plot(YTest2, YTest2)
 plt.xlabel("True Temperature (°C)")
 plt.ylabel("Predicted Temperature (°C)")
-plt.savephig('TIME.png', format='png', dpi=1200, bbox_inches='tight')
+plt.savefig('TIME.png', format='png', dpi=1200, bbox_inches='tight')
 
 
 R1 = np.concatenate((XTest, YTest1.reshape(-1, 1), testPredictions1.reshape(-1, 1)), axis=1)
 R2 = np.concatenate((XTest, YTest2.reshape(-1, 1), testPredictions2.reshape(-1, 1)), axis=1)
 
-# phirst temperature surface
+# first temperature surface
 xlin = np.linspace(np.min(R1[:,0]), np.max(R1[:,0]), 50)
 ylin = np.linspace(np.min(R1[:,1]), np.max(R1[:,1]), 50)
 X1, Y1 = np.meshgrid(xlin, ylin)
 Z_predict = griddata((R1[:,0], R1[:,1]), R1[:,-1], (X1, Y1), method='nearest')  # predict
 Z_real = griddata((R1[:,0], R1[:,1]), R1[:,4], (X1, Y1), method='nearest')  # real
-phig = plt.phigure(phigsize=(20, 10))
-ax = phig.add_subplot(111, projection='3d')
+fig = plt.figure(figsize=(20, 10))
+ax = fig.add_subplot(111, projection='3d')
 
 surf = ax.plot_surface(Y1, X1, Z_predict, alpha=0.3, facecolor='r', linewidth=0.1, edgecolor='r')
 surf._facecolors2d = surf._facecolor3d
@@ -108,7 +110,7 @@ ax.set_xlabel(r'$H_0$ (A/m)')
 ax.set_xlim(4000,1000)
 ax.set_zlabel(r'$T_c$ (°C)')
 ax.view_init(elev=20, azim=70)
-plt.savephig('1.png', format='png', dpi=1200, bbox_inches='tight')
+plt.savefig('1.png', format='png', dpi=1200, bbox_inches='tight')
 
 # Second temperature surface
 xlin = np.linspace(np.min(R1[:,2]), np.max(R1[:,2]), 50)
@@ -116,8 +118,8 @@ ylin = np.linspace(np.min(R1[:,3]), np.max(R1[:,3]), 50)
 X1, Y1 = np.meshgrid(xlin, ylin)
 Z_predict = griddata((R1[:,2], R1[:,3]), R1[:,-1], (X1, Y1), method='nearest')  # predict
 Z_real = griddata((R1[:,2], R1[:,3]), R1[:,4], (X1, Y1), method='nearest')  # real
-phig = plt.phigure(phigsize=(20, 10))
-ax = phig.add_subplot(111, projection='3d')
+fig = plt.figure(figsize=(20, 10))
+ax = fig.add_subplot(111, projection='3d')
 
 surf = ax.plot_surface(Y1, X1, Z_predict, alpha=0.3, facecolor='r', linewidth=0.1, edgecolor='r')
 surf._facecolors2d = surf._facecolor3d
@@ -133,16 +135,16 @@ ax.set_xlabel(r'$a$ (m)')
 ax.set_xlim(8e-9,5e-9)
 ax.set_zlabel(r'$T_c$ (°C)')
 ax.view_init(elev=20, azim=20)
-plt.savephig('2.png', format='png', dpi=1200, bbox_inches='tight')
+plt.savefig('2.png', format='png', dpi=1200, bbox_inches='tight')
 
-# phirst time surface
+# first time surface
 xlin = np.linspace(np.min(R1[:,0]), np.max(R1[:,0]), 50)
 ylin = np.linspace(np.min(R1[:,1]), np.max(R1[:,1]), 50)
 X1, Y1 = np.meshgrid(xlin, ylin)
 Z_predict = griddata((R1[:,0], R1[:,1]), R2[:,-1], (X1, Y1), method='nearest')  # predict
 Z_real = griddata((R1[:,0], R1[:,1]), R2[:,4], (X1, Y1), method='nearest')  # real
-phig = plt.phigure(phigsize=(20, 10))
-ax = phig.add_subplot(111, projection='3d')
+fig = plt.figure(figsize=(20, 10))
+ax = fig.add_subplot(111, projection='3d')
 
 surf = ax.plot_surface(Y1, X1, Z_predict, alpha=0.3, facecolor='r', linewidth=0.1, edgecolor='r')
 surf._facecolors2d = surf._facecolor3d
@@ -157,7 +159,7 @@ ax.set_xlabel(r'$H_0$ (A/m)')
 ax.set_xlim(4000,1000)
 ax.set_zlabel(r'$t_\infty$ (s)')
 ax.view_init(elev=20, azim=70)
-plt.savephig('3.png', format='png', dpi=1200, bbox_inches='tight')
+plt.savefig('3.png', format='png', dpi=1200, bbox_inches='tight')
 
 # Second time surface
 xlin = np.linspace(np.min(R1[:,2]), np.max(R1[:,2]), 50)
@@ -165,8 +167,8 @@ ylin = np.linspace(np.min(R1[:,3]), np.max(R1[:,3]), 50)
 X1, Y1 = np.meshgrid(xlin, ylin)
 Z_predict = griddata((R1[:,2], R1[:,3]), R2[:,-1], (X1, Y1), method='nearest')  # predict
 Z_real = griddata((R1[:,2], R1[:,3]), R2[:,4], (X1, Y1), method='nearest')  # real
-phig = plt.phigure(phigsize=(20, 10))
-ax = phig.add_subplot(111, projection='3d')
+fig = plt.figure(figsize=(20, 10))
+ax = fig.add_subplot(111, projection='3d')
 
 surf = ax.plot_surface(Y1, X1, Z_predict, alpha=0.3, facecolor='r', linewidth=0.1, edgecolor='r')
 surf._facecolors2d = surf._facecolor3d
@@ -182,7 +184,7 @@ ax.set_xlabel(r'$a$ (m)')
 ax.set_xlim(8e-9,5e-9)
 ax.set_zlabel(r'$t_\infty$ (s)')
 ax.view_init(elev=20, azim=20)
-plt.savephig('4.png', format='png', dpi=1200, bbox_inches='tight')
+plt.savefig('4.png', format='png', dpi=1200, bbox_inches='tight')
 
 
 ###############################################################################
