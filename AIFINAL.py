@@ -55,7 +55,7 @@ YTrain2_scaled = scaler_Y2.fit_transform(YTrain2.reshape(-1, 1)).ravel()
 Mdl1 = MLPRegressor(hidden_layer_sizes=(161, 10, 300),
                     activation='logistic', #logistic = sigmoid
                     alpha=5.0754e-06,
-                    max_iter=1000,
+                    max_iter=3000,
                     solver='lbfgs')
 Mdl1.fit(XTrain_scaled, YTrain1_scaled)
 
@@ -63,7 +63,7 @@ Mdl1.fit(XTrain_scaled, YTrain1_scaled)
 Mdl2 = MLPRegressor(hidden_layer_sizes=(10, 293),
                     activation='logistic', #logistic = sigmoid
                     alpha=2.1568e-08,
-                    max_iter=1000,
+                    max_iter=3000,
                     solver='lbfgs')
 Mdl2.fit(XTrain_scaled, YTrain1_scaled)
 
